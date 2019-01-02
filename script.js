@@ -4,7 +4,7 @@ let ctx;
 const init = () => {
   c = document.getElementById("myCanvas");
   ctx = c.getContext("2d");
-  
+
   koch(30, 0, 40, 0, -60)
   koch(30, 100, 50, 0, -7)
   koch(30, 200, 50, 0, -45)
