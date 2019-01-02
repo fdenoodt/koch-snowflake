@@ -8,10 +8,10 @@ const init = () => {
   c = document.getElementById("myCanvas");
   ctx = c.getContext("2d");
 
-  koch(200, 100, 100, 0)
+  base(300, 100, 100, 0)
 }
 
-const koch = (l, x, y, deg) => {
+const base = (l, x, y, deg) => {
   const l1 = {
     x: x,
     y: y,
@@ -38,6 +38,59 @@ const koch = (l, x, y, deg) => {
   drawLine(l1);
   drawLine(l2);
   drawLine(l3);
+
+  koch(lines, 1, true);
+}
+
+const koch = (lines, count, side) => {
+  if (count >= 5)
+    return;
+
+  const newlines = [];
+  lines.forEach(line => {
+    const l = line.l / 3;
+    const deg = line.deg;
+    const baseX = line.x + l * Math.cos(rad(deg));
+    const baseY = line.y + l * Math.sin(rad(deg));
+
+    let l1;
+    let l2;
+    if (side) {
+      l1 = {
+        x: baseX + l * Math.cos(rad(deg - 60)),
+        y: baseY + l * Math.sin(rad(deg - 60)),
+        l: l,
+        deg: deg + 180 - 60
+      }
+
+      l2 = {
+        x: l1.x + l * Math.cos(rad(deg + 60)),
+        y: l1.y + l * Math.sin(rad(deg + 60)),
+        l: l,
+        deg: deg + 180 + 60
+      }
+    }
+    else {
+      l1 = {
+        x: baseX + l * Math.cos(rad(deg + 60)),
+        y: baseY + l * Math.sin(rad(deg + 60)),
+        l: l,
+        deg: deg + 180 + 60
+      }
+
+      l2 = {
+        x: l1.x + l * Math.cos(rad(deg - 60)),
+        y: l1.y + l * Math.sin(rad(deg - 60)),
+        l: l,
+        deg: deg + 180 - 60
+      }
+    }
+
+    drawLine(l1);
+    drawLine(l2);
+    newlines.push(l1, l2);
+  });
+  koch(newlines, ++count, !side)
 }
 
 const rad = (deg) => {
@@ -49,7 +102,6 @@ const drawLine = (line) => {
   y1 = line.y
   x2 = x1 + line.l * Math.cos(rad(line.deg))
   y2 = y1 + line.l * Math.sin(rad(line.deg))
-
 
   ctx.beginPath();
   ctx.moveTo(x1, y1);
